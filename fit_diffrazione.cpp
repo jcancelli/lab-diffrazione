@@ -31,29 +31,32 @@ Si possono utilizzare questi comandi da terminale
 #include "TROOT.h"
 #include "parameters.hpp"
 #include <TMath.h>
+#include <iostream>
 #include <string>
 
-Parameters parameters[3] = {{.file = "./data/monofessura.meters.dat",
-                             .d = 0.00015, // 0.15mm
-                             .x0 = 0.058,  // 58000
-                             .L = 0.419,   // 41.9cm
-                             .lambda = 0,
-                             .norm = 1,
-                             .bkg = 0},
-                            {.file = "./data/doppia_fessura.meters.dat",
-                             .d = 0.00015, // 0.15mm
-                             .x0 = 0.0625,
-                             .L = 0.705, // 70.5cm
-                             .lambda = 0,
-                             .norm = 1,
-                             .bkg = 0},
-                            {.file = "./data/doppia_fessura_2.meters.dat",
-                             .d = 0.00015, // 0.15mm
-                             .x0 = 0.062,
-                             .L = 0.95, // 95cm
-                             .lambda = 0,
-                             .norm = 1,
-                             .bkg = 0}};
+constexpr int PARAMETERS_COUNT = 3;
+Parameters parameters[PARAMETERS_COUNT] = {
+    {.file = "./data/monofessura.meters.dat",
+     .d = 0.00015, // 0.15mm
+     .x0 = 0.058,  // 58000
+     .L = 0.419,   // 41.9cm
+     .lambda = 532.8E-9,
+     .norm = 100000,
+     .bkg = 0},
+    {.file = "./data/doppia_fessura.meters.dat",
+     .d = 0.00015, // 0.15mm
+     .x0 = 0.0625,
+     .L = 0.705, // 70.5cm
+     .lambda = 632.8E-9,
+     .norm = 500,
+     .bkg = 0},
+    {.file = "./data/doppia_fessura_2.meters.dat",
+     .d = 0.00015, // 0.15mm
+     .x0 = 0.062,
+     .L = 0.95, // 95cm
+     .lambda = 632.8E-9,
+     .norm = 500,
+     .bkg = 0}};
 
 Double_t Diffrazione(double *x, double *par) {
   const auto d = par[0], x0 = par[1], L = par[2], lambda = par[3],
@@ -127,20 +130,35 @@ void myfit(TString fname = " ", double bkg = 2., double Norm = 500.,
   leg->Draw();
 }
 
-void data() {
-  for (auto const &param : parameters) {
-    mydata(param.file);
+void data(int i = -1) {
+  if (i == -1) {
+    for (auto const &param : parameters) {
+      mydata(param.file);
+    }
+  } else {
+    if (i >= PARAMETERS_COUNT) {
+      std::cout << "Invalid index\n";
+      return;
+    }
+    mydata(parameters[i].file);
   }
 }
 
-void fit() {
-  for (auto const &param : parameters) {
+void fit(int i = -1) {
+  if (i == -1) {
+    for (auto const &param : parameters) {
+      myfit(param.file, param.bkg, param.norm, param.lambda, param.d, param.x0,
+            param.L);
+    }
+  } else {
+    if (i >= PARAMETERS_COUNT) {
+      std::cout << "Invalid index\n";
+      return;
+    }
+    auto param = parameters[i];
     myfit(param.file, param.bkg, param.norm, param.lambda, param.d, param.x0,
           param.L);
   }
 }
 
-void fit_diffrazione() {
-  myfunc();
-  fit();
-}
+void fit_diffrazione() { myfunc(); }
