@@ -64,24 +64,14 @@ Double_t Diffrazione(double *x, double *par) {
   return Diffr;
 }
 
-void fit_diffrazione() { TF1 *func = new TF1("myfunc", Diffrazione); }
-
-void myfunc(double bkg = 1., double Norm = 500., double lambda = 632.8E-9,
-            double d = 1.E-4, double x0 = 0.057, double L = 1.0) {
-  TF1 *f1 = (TF1 *)gROOT->GetFunction("myfunc");
-  f1->SetParameter(0, d);
-  f1->SetParameter(1, x0);
-  f1->SetParameter(2, L);
-  f1->SetParameter(3, lambda);
-  f1->SetParameter(4, Norm);
-  f1->SetParameter(5, bkg);
+void myfunc() {
+  TF1 *f1 = new TF1("myfunc", Diffrazione, 0, 0, 6);
   f1->SetParName(0, "Larghezza fenditura");
   f1->SetParName(1, "shift lungo x");
   f1->SetParName(2, "Distanza fenditura - schermo");
   f1->SetParName(3, "Lambda");
   f1->SetParName(4, "Normalizzazione");
   f1->SetParName(5, "fondo");
-  f1->Draw("same");
 }
 
 void mydata(TString fname = " ") {
@@ -103,6 +93,7 @@ void myfit(TString fname = " ", double bkg = 2., double Norm = 500.,
   TCanvas *c = new TCanvas((std::string(fname) + "fitcanvas").c_str());
   TGraphErrors *data = new TGraphErrors(fname, "%lg %lg %lg");
   TF1 *f1 = (TF1 *)gROOT->GetFunction("myfunc");
+  f1->SetRange(data->GetX()[0], data->GetX()[data->GetN() - 1]);
   f1->SetParameter(0, d);
   f1->SetParameter(1, x0);
   f1->SetParameter(2, L);
@@ -143,9 +134,13 @@ void data() {
 }
 
 void fit() {
-  myfunc();
   for (auto const &param : parameters) {
     myfit(param.file, param.bkg, param.norm, param.lambda, param.d, param.x0,
           param.L);
   }
+}
+
+void fit_diffrazione() {
+  myfunc();
+  fit();
 }
