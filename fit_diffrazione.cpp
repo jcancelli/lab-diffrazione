@@ -34,23 +34,23 @@ Si possono utilizzare questi comandi da terminale
 #include <string>
 
 Parameters parameters[3] = {{.file = "./data/monofessura.meters.dat",
-                             .d = 0.0015, // 0.15mm
-                             .x0 = 0.058, // 58000
-                             .L = 4.19,   // 41.9cm
+                             .d = 0.00015, // 0.15mm
+                             .x0 = 0.058,  // 58000
+                             .L = 0.419,   // 41.9cm
                              .lambda = 0,
                              .norm = 1,
                              .bkg = 0},
                             {.file = "./data/doppia_fessura.meters.dat",
-                             .d = 0.15, // 0.15mm
-                             .x0 = 62500,
-                             .L = 70.5, // 70.5cm
+                             .d = 0.00015, // 0.15mm
+                             .x0 = 0.0625,
+                             .L = 0.705, // 70.5cm
                              .lambda = 0,
                              .norm = 1,
                              .bkg = 0},
                             {.file = "./data/doppia_fessura_2.meters.dat",
-                             .d = 0.15, // 0.15mm
-                             .x0 = 62000,
-                             .L = 95, // 95cm
+                             .d = 0.00015, // 0.15mm
+                             .x0 = 0.062,
+                             .L = 0.95, // 95cm
                              .lambda = 0,
                              .norm = 1,
                              .bkg = 0}};
