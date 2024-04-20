@@ -52,7 +52,7 @@ func main() {
 				log.Fatal(err)
 			}
 			errX *= 10e-7
-			builder.WriteString(fmt.Sprintf("%9.9f\t%s\t%9.9f\n", x, columns[1], errX))
+			builder.WriteString(fmt.Sprintf("%15.15f\t%s\t%15.15f\n", x, columns[1], errX))
 		}
 
 		outFile, err := os.Create(fmt.Sprintf("./data/%s.meters.dat", datafile.newName))
